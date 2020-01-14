@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Oxygen', sans-serif;
+  /* font-family: 'Nunito Sans', sans-serif;
+  font-family: 'Cabin', sans-serif;
+  font-family: 'Abel', sans-serif;
+  font-family: 'Hind Siliguri', sans-serif;
+  font-family: 'Barlow', sans-serif; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+} */
+p{
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 2.0rem !important
+}
+label{
+  font-family: 'IBM Plex Sans', sans-serif;
+  /* font-size: 1.2rem !important */
+}
+button{
+  font-family: 'Barlow', sans-serif;
+}
+h1{
+  font-family: 'Hind Siliguri', sans-serif;
+}
+h2{
+  font-family: 'Nunito Sans', sans-serif;
+}
+h3{
+  font-family: 'Abel', sans-serif;
+}
+a{
+  font-family: 'Cabin', sans-serif;
+}
+div{
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+
+.buttonSucess{
+  background-color: green !important
+}
+.buttonNormal{
+  background-color: blue 
+}
+.buttonAlert{
+  background-color: red !important 
+}
+.carouselLogin{
+  max-width: 441px;
+}
