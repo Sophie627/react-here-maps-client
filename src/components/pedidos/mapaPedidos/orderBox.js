@@ -64,22 +64,25 @@ class OrderBox extends React.Component {
 
         var orders = [];
         for(var i = 0; i < pedidos.length; i++) {
-            if (pedidos[i].Delivery !== null) {
-
-                orders.push({
-                    id: pedidos[i].id,
-                    Order: "Pedido " + pedidos[i].id,
-                    Delivery: pedidos[i].Delivery.Name + " " + pedidos[i].Delivery.LastName,
-                    DeliveryId: pedidos[i].Delivery.id,
-                });
-            } else {
+            if (pedidos[i].State.Description != "Entregado") {
+            
+                if (pedidos[i].Delivery !== null) {
+    
                     orders.push({
                         id: pedidos[i].id,
                         Order: "Pedido " + pedidos[i].id,
-                        Delivery: "Sin Asignar",
-                        DeliveryId: null,
+                        Delivery: pedidos[i].Delivery.Name + " " + pedidos[i].Delivery.LastName,
+                        DeliveryId: pedidos[i].Delivery.id,
                     });
-
+                } else {
+                        orders.push({
+                            id: pedidos[i].id,
+                            Order: "Pedido " + pedidos[i].id,
+                            Delivery: "Sin Asignar",
+                            DeliveryId: null,
+                        });
+    
+                }
             }
         }
 

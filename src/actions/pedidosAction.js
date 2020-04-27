@@ -17,7 +17,9 @@ export const mostrarPedidos = () => async dispatch => {
 }
 
 export const eliminarPedido = (id) => async dispatch => {
-    await axios.post("https://roraso.herokuapp.com/Turn/DeleteTurn",{'id': id},
+    await axios.post("https://roraso.herokuapp.com/Pedido/Delete", {
+                'id': id
+            },
     { headers: { 'access-token': localStorage.getItem('access-token')}})
         .then(res => {
             if(res.status === 200){
@@ -28,8 +30,8 @@ export const eliminarPedido = (id) => async dispatch => {
                     confirmButtonText: 'Sera Redirigido'
                 })
                 setTimeout(function(){ 
-                    window.location.href = "https://roraso.herokuapp.com/rrhh/turnos";
-                }, 3500);
+                    window.location.href = "http://localhost:3000/pedidos";
+                }, 1500);
             }
             else{
                 Swal.fire({
@@ -86,7 +88,7 @@ export const agregarPedido = (pedido) => async dispatch => {
                     confirmButtonText: 'Sera Redirigido'
                 })
                 setTimeout(function(){ 
-                    window.location.href = "https://roraso.herokuapp.com/pedidos";
+                    window.location.href = "http://localhost:3000/pedidos";
                 }, 3500);
             }
             else{
@@ -111,6 +113,64 @@ export const agregarPedido = (pedido) => async dispatch => {
 
     dispatch({
         type: AGREGAR_PEDIDO,
+        payload: pedido
+    })
+}
+
+export const editarPedido = (pedido) => async dispatch => {
+
+    const {id, date, user, amount, state, combo, client, product, address} = pedido;
+
+    const data = {
+        id : id,
+        Date : date,
+        Users : user,
+        Amount : amount,
+        State : state,
+        Clients : client,
+        CombosPorPedido : combo,
+        ProductosPorPedido : product,
+        Adress : address
+    }
+
+    console.log(data)
+
+    await axios.post("https://roraso.herokuapp.com/Pedido/Update",data,
+    {headers: { 'access-token': localStorage.getItem('access-token')}})
+        .then(res => {
+            if(res.status === 200 || res.status === 500){
+                Swal.fire({
+                    title: 'Correcto!',
+                    text: 'Se ha añadido un nuevo pedido',
+                    type: 'success',
+                    confirmButtonText: 'Sera Redirigido'
+                })
+                setTimeout(function(){ 
+                    window.location.href = "http://localhost:3000/pedidos";
+                }, 3500);
+            }
+            else{
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Se ha producido un error al intentar crear el pedido',
+                    type: 'error',
+                    confirmButtonText: 'Reintentar'
+                })
+                return;
+            }
+        })
+        .catch(err => {
+            Swal.fire({
+                title: 'Error!',
+                text: 'El Servidor no ha respondido la solicitud',
+                type: 'error',
+                confirmButtonText: 'Reintentar'
+            })
+            return;
+        })
+
+    dispatch({
+        type: EDITAR_PEDIDO,
         payload: pedido
     })
 }
@@ -172,6 +232,12 @@ export const asignarDelivery = (line) => async dispatch => {
 // export const editarRol = (rol) => async dispatch => {
     
 //     const {id, nombre, descripcion, permisos} = rol;
+
+    /*await axios.post("https://roraso.herokuapp.com/Pedido/", data, {
+        headers: {
+            'access-token': localStorage.getItem('access-token')
+        }
+    })*/
 
 //     const data = {
 //         rol : {

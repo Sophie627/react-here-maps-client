@@ -26,6 +26,11 @@ export default function (state = initialState, action){
                 ...state,
                 pedidos : [...state.pedidos, action.payload]
             }
+        case EDITAR_PEDIDO : 
+            return {
+                ...state,
+                pedidos : [...state.pedidos, action.payload]
+            }
         case ASIGNAR_DELIVERY : 
             return {
                 ...state,

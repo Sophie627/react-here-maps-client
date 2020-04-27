@@ -80,7 +80,7 @@ class ListaTurnos extends Component {
                 turnos[i].OutTime = turnos[i].OutHour + ":" + turnos[i].OutMinute;
             }
             return (
-                <SortableTbl tblData={turnos}
+                <SortableTbl tblData={turnos.sort(function(a, b) {return b.id - a.id})}
                     tHead={tHead}
                     customTd={[
                                 {custd: (ActionTurnoComponent), keyItem: "Actions"},

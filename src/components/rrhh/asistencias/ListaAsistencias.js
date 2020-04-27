@@ -247,7 +247,7 @@ class ListaAsistencias extends Component {
         else{
 
             return (
-                <SortableTbl tblData={asistencias}
+                <SortableTbl tblData={asistencias.sort(function(a, b) {return b.id - a.id})}
                     tHead={tHead}
                     customTd={[
                                 {custd: (ActionAsistenciaComponent), keyItem: "Actions"},

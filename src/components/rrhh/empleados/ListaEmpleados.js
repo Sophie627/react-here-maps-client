@@ -101,7 +101,7 @@ class ListadoEmpleados extends Component {
         else{
 
             return (
-                <SortableTbl tblData={empleados}
+                <SortableTbl tblData={empleados.sort(function(a, b) {return b.id - a.id})}
                     tHead={tHead}
                     customTd={[
                                 {custd: (ActionEmpleadoComponent), keyItem: "Actions"},

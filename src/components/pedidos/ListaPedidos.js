@@ -7,8 +7,7 @@ import SortableTbl from "react-sort-search-table";
 //Redux
 
 import { connect } from 'react-redux';
-import { mostrarPedidos } from '../../actions/pedidosAction';
-import { eliminarEmpleado } from '../../actions/empleadosAction';
+import { mostrarPedidos, eliminarPedido } from '../../actions/pedidosAction';
 
 //CSS
 import { css } from "@emotion/core";
@@ -45,12 +44,12 @@ let tHead = [
     "Acciones",
 ];
 
-class ActionEmpleadoComponent extends React.Component {
+class ActionPedidoComponent extends React.Component {
 
-  eliminarEmpleado = () =>{
+  eliminarPedido = () => {
       const {id} = this.props.rowData;
 
-      this.props.eliminarEmpleado(id);
+      this.props.eliminarPedido(id);
   }
 
   render() {
@@ -71,7 +70,7 @@ class ActionEmpleadoComponent extends React.Component {
                 Editar
             </Link>
 
-            <button style={buttonStyle} onClick={ this.eliminarEmpleado } type="button" className="btn btn-danger">Borrar</button>
+            <button style={buttonStyle} onClick={ this.eliminarPedido } type="button" className="btn btn-danger">Borrar</button>
         </td> 
     );
   }
@@ -91,6 +90,8 @@ class ListadoPedidos extends Component {
 
         const pedidos = this.props.pedidos;
 
+        var preparingOrders = [];
+
         console.log(pedidos);
         for (var i = 0; i < pedidos.length; i++) {
             if (pedidos[i].Date !== null) {
@@ -103,8 +104,8 @@ class ListadoPedidos extends Component {
             }
             pedidos[i].Users = pedidos[i].Users.Dni;
             pedidos[i].State = pedidos[i].State.Description;
-            pedidos[i].Clients = (pedidos[i].Clients.Name + " " + pedidos[i].Clients.LastName).substr(0, 8);
-            pedidos[i].Adress = pedidos[i].Adress.Adress + " " + pedidos[i].Adress.Floor + " " + pedidos[i].Adress.Department;
+            if (pedidos[i].Clients !== null) pedidos[i].Clients = (pedidos[i].Clients.Name + " " + pedidos[i].Clients.LastName).substr(0, 8);
+            if (pedidos[i].Adress !== null) pedidos[i].Adress = pedidos[i].Adress.Adress + " " + pedidos[i].Adress.Floor + " " + pedidos[i].Adress.Department;
             // pedidos[i].Amount = "pedidos[i].Amount.toFixed(0)";
 
             // pedidos[i].Deliverys = "pedidos[i].Delivery.Name + pedidos[i].Delivery.LastName";
@@ -114,6 +115,7 @@ class ListadoPedidos extends Component {
             } else {
                 pedidos[i].Deliverys = pedidos[i].Delivery.Name + " " + pedidos[i].Delivery.LastName;
             }
+            if (pedidos[i].State != "Entregado") preparingOrders.push(pedidos[i]);
         }
 
         if(pedidos.length === 0) {
@@ -146,15 +148,15 @@ class ListadoPedidos extends Component {
         }
         else{
             return (
-                <SortableTbl tblData={pedidos}
+                <SortableTbl tblData={preparingOrders.sort(function(a, b) {return b.id - a.id})}
                     tHead={tHead}
                     customTd={[
-                                {custd: (ActionEmpleadoComponent), keyItem: "Actions"},
+                                {custd: (ActionPedidoComponent), keyItem: "Actions"},
                                 ]}
                     dKey={col}
                     search={true}
                     defaultCSS={true}
-                    eliminarEmpleado = {this.props.eliminarEmpleado}
+                    eliminarPedido = {this.props.eliminarPedido}
                 />
             );
 		}
@@ -168,5 +170,5 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
     mostrarPedidos,
-    eliminarEmpleado
+    eliminarPedido
 })(ListadoPedidos);

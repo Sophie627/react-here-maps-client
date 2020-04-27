@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 //Componentes
 import Paper from '@material-ui/core/Paper';
 import Header from '../header/IndexHeader';
-import Select from 'react-select';
+import BaseSelect from 'react-select';
+import FixRequiredSelect from "./FixRequiredSelect";
 import { Grid, Modal, Button, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -13,9 +14,16 @@ import Swal from 'sweetalert2'
 
 //Redux
 import { connect } from 'react-redux';
-import { agregarPedido } from '../../actions/pedidosAction';
+import { editarPedido } from '../../actions/pedidosAction';
 import { mostrarProductos } from '../../actions/productosAction';
 import { mostrarCombos } from '../../actions/combosAction'
+
+const Select = props => (
+  <FixRequiredSelect
+    {...props}
+    SelectComponent={BaseSelect}
+  />
+);
 
 class MyVerticallyCenteredModal extends Component {
 
@@ -162,12 +170,18 @@ class NuevoPedido extends Component {
       this.props.mostrarCombos();
       this.state.selectedProductsOption = [];
       {this.props.location.state.ProductosPorPedido.map(producto => (
-        this.state.selectedProductsOption.push({value: producto.id,label: producto.Product.Name + " " + producto.Product.Description,count: producto.Count})
+        this.state.selectedProductsOption.push({value: producto.Product.id, price: producto.Product.Amount, label: producto.Product.Name + " " + producto.Product.Description,count: producto.Count})
+      ))}
+      {this.props.location.state.ProductosPorPedido.map(producto => (
+        this.state.optionsProductsCount[producto.Product.id] = {Product: producto.Product.id, Count: producto.Count}
       ))}
       
       this.state.selectedComboOption = [];
       {this.props.location.state.CombosPorPedido.map(producto => (
-        this.state.selectedComboOption.push({value: producto.id,label: producto.Offer.Name ,count: producto.Count})
+        this.state.selectedComboOption.push({value: producto.Offer.id, price: producto.Offer.Amount, label: producto.Offer.Name ,count: producto.Count})
+      ))}
+      {this.props.location.state.CombosPorPedido.map(producto => (
+        this.state.optionsCombosCount[producto.Offer.id] = {Offer: producto.Offer.id, Count: producto.Count}
       ))}
 
     }
@@ -179,7 +193,6 @@ class NuevoPedido extends Component {
     }
 
     reorganizarProductos = () => {
-        // console.log(this.props)
       if (this.state.optionsProductsName.length == this.props.productos.length) return null;
       {
         this.props.productos.map(producto => (
@@ -327,41 +340,42 @@ class NuevoPedido extends Component {
 
           const o = Object.entries(this.state.optionsProductsCount).reduce((s, [k, v]) =>
               k in dictProduct ? (s[k] = v, s) : s, []);
+              
+              
+              let price = [];
 
-          // console.log(o);
-
-          let price = [];
-
+              
           for (var i=0; i<this.state.selectedProductsOption.length; i++){
             price[this.state.selectedProductsOption[i]['value']] = { "value": this.state.selectedProductsOption[i]['value'], "price": this.state.selectedProductsOption[i]['price'] };
           }
+
 
           //Elimino los elementos nullos
           var productFiltered = o.filter( el => {
               return el != null;
           });
 
-
+          
           let priceNew = [];
-
+          
           for (var i=0; i<productFiltered.length; i++){
             priceNew[this.state.selectedProductsOption[i]['value']] = { "value": productFiltered[i]['Product'], "count": productFiltered[i]['Count'] };
           }
-
+          
           var priceProd = []
-
+          
           {price.map(price => {
-              priceProd.push(price.price);
+            priceProd.push(price.price);
           })}
-
+          
           var countProd = []
-
+          
           {priceNew.map(count => {
             countProd.push(count.count);
           })}
-
+          
           var finalProd = (priceProd.reduce(function(r,a,i){return r+a*countProd[i]},0));
-
+          
           this.setState({
             totalPrice : finalProd
           })
@@ -382,7 +396,6 @@ class NuevoPedido extends Component {
 
           const p = Object.entries(this.state.optionsCombosCount).reduce((s, [k, v]) =>
               k in dictCombo ? (s[k] = v, s) : s, []);
-
 
           let priceCombo = [];
 
@@ -426,6 +439,7 @@ class NuevoPedido extends Component {
         const fecha = a.toISOString().split('T')[0]
 
         const pedido = {
+          id: this.props.location.state.id,
           date : fecha,
           user : this.props.auth.user.Id,
           amount : finalTotal,
@@ -436,7 +450,9 @@ class NuevoPedido extends Component {
           address : this.state.direElegida.id.id
         }
 
-        this.props.agregarPedido(pedido);
+        console.log(pedido);
+
+        this.props.editarPedido(pedido);
     }
 
     buscarDireccion = () => {
@@ -575,7 +591,8 @@ class NuevoPedido extends Component {
 
       // console.log(this.props)
       // console.log(this.state.direElegida)
-      console.log(this.props.combos)
+      console.log(this.props.location.state.CombosPorPedido);
+      console.log(this.state)
 
         const { selectedComboOption, selectedProductsOption } = this.state;
         let modalClose = () => this.setState({ modalShow: false, direcciones: [] });
@@ -590,25 +607,27 @@ class NuevoPedido extends Component {
                     <form onSubmit={this.generarPedido} className="col-5">
                         <div className="form-group">
                             <label>Seleccione Combo</label>
-                            <Select required
+                            <Select 
                                 placeholder="Ingrese o Selecciones el Combo"
                                 value={selectedComboOption}
                                 onChange={this.handleComboChange}
                                 options={this.state.optionsComboName}
-                                isMulti
-                                isSearchable
+                                isMulti 
+                                isSearchable 
+                                required
                             />
                         </div>
                         {this.mostrarCombosListos()}
                         <div className="form-group">
                             <label>Seleccione Productos</label>
-                            <Select required
+                            <Select
                                 placeholder="Ingrese o Selecciones los Productos"
                                 value={selectedProductsOption}
                                 onChange={this.handleProductsChange}
                                 options={this.state.optionsProductsName}
                                 isMulti
                                 isSearchable
+                                required
                             />
                         </div>
                         {this.mostrarProductosListos()}
@@ -663,4 +682,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps, {mostrarCombos, mostrarProductos, agregarPedido})(NuevoPedido);
+export default connect(mapStateToProps, {mostrarCombos, mostrarProductos, editarPedido})(NuevoPedido);

@@ -125,7 +125,7 @@ class ListadoProductos extends Component {
         }
         
         return (
-            <SortableTbl tblData={products}
+            <SortableTbl tblData={products.sort(function(a, b) {return b.id - a.id})}
                 tHead={tHead}
                 customTd={[
                             {custd: (ActionProductoComponent), keyItem: "Actions"},

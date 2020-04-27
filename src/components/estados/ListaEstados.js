@@ -67,7 +67,7 @@ class ListaEstados extends Component {
         const estados = this.props.estados;
 
         return (
-            <SortableTbl tblData={estados}
+            <SortableTbl tblData={estados.sort(function(a, b) {return b.id - a.id})}
                 tHead={tHead}
                 customTd={[
                             {custd: (ActionEstadoComponent), keyItem: "Actions"},

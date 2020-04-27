@@ -98,7 +98,11 @@ class ListaGastos extends Component {
         else{
 
             return (
-                <SortableTbl tblData={gastos}
+                < SortableTbl tblData = {
+                    gastos.sort(function (a, b) {
+                        return b.id - a.id
+                    })
+                }
                     tHead={tHead}
                     customTd={[
                                 {custd: (ActionGastoComponent), keyItem: "Actions"},

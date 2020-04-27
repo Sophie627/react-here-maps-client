@@ -105,7 +105,7 @@ class ListaClientes extends Component {
         else{
 
         return (
-            <SortableTbl tblData={clientes}
+            <SortableTbl tblData={clientes.sort(function(a, b) {return b.id - a.id})}
                 tHead={tHead}
                 customTd={[
                             {custd: (ActionClienteComponent), keyItem: "Actions"},

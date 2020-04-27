@@ -116,7 +116,7 @@ class ListaCombos extends Component {
       else{
 
         return (
-          <SortableTbl tblData={combos}
+          <SortableTbl tblData={combos.sort(function(a, b) {return b.id - a.id})}
               tHead={tHead}
               customTd={[
                           {custd: (ActionComboComponent), keyItem: "Actions"},

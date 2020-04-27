@@ -99,7 +99,9 @@ class ListaRoles extends Component {
         else{
             return (
                 < SortableTbl tblData = {
-                    roles
+                    roles.sort(function (a, b) {
+                        return b.id - a.id
+                    })
                 }
                     tHead={tHead}
                     customTd={[

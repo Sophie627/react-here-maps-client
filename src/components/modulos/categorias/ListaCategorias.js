@@ -100,7 +100,11 @@ class ListadoCategorias extends Component {
         else{
 
             return (
-                <SortableTbl tblData={categorias}
+                < SortableTbl tblData = {
+                    categorias.sort(function (a, b) {
+                        return b.id - a.id
+                    })
+                }
                     tHead={tHead}
                     customTd={[
                                 {custd: (ActionCategoriasComponent), keyItem: "Actions"},
